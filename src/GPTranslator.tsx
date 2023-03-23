@@ -11,8 +11,7 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 async function translate(sourceLanguage: string, targetLanguage: string, sourceLanguageText: string, setAnswer: (answer: string) => void) {
-  const query = `
-Please translate the following program from ${sourceLanguage} to ${targetLanguage}:
+  const query = `Please translate the following program from ${sourceLanguage} to ${targetLanguage} ?
    
 ${sourceLanguageText}
    
@@ -21,7 +20,7 @@ Explain the translation result in English.
   console.log(query);
   const completion = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
-    messages: [{role: "user", content: query}],
+    messages: [{role: 'system', content:'You are an expert programmer who knows most programming languages.  You are very good at program translation.'}, {role: 'assistant', content:'Yes.'}, {role: "user", content: query}],
     top_p: 0
   });
   const answer = completion.data.choices[0].message.content;
